@@ -68,7 +68,7 @@ class BaseModel:
         """
         map_objects = {}
         for key, value in self.__dict__.items():
-            if key in ("created_at", "updated_at"):
+            if key in ("created_at", "updated_at")
                 map_objects[key] = value.isoformat()
             else:
                 map_objects[key] = value
