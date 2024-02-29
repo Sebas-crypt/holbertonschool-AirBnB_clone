@@ -1,66 +1,53 @@
-#!/usr/bin/python3
-"""
-Custom base class for the entire project
-"""
-
 from uuid import uuid4
 from datetime import datetime
-import models
 
 class BaseModel:
-    """Custom base for all the classes in the AirBnb console project
+    """BaseModel class defining common attributes/methods for other classes.
 
-    Attributes:
-        id(str): handles unique user identity
-        created_at: assigns current datetime
-        updated_at: updates current datetime
+    Public instance attributes:
+        id: string - assigned with a uuid when an instance is created
+        created_at: datetime - assigned with the current datetime when an instance is created
+        updated_at: datetime - assigned with the current datetime when an instance is created and
+                                 updated every time you change your object
 
-    Methods:
-        __str__: prints the class name, id, and creates dictionary
-        representations of the input values
-        save(self): updates instance attributes with current datetime
-        to_dict(self): returns a dictionary containing all keys/values of __dict__ of the instance
+    Public instance methods:
+        __str__: prints [<class name>] (<self.id>) <self.__dict__>
+        save(self): updates the public instance attribute updated_at with the current datetime
+        to_dict(self): returns a dictionary containing all keys/values of __dict__ of the instance:
+            by using self.__dict__, only instance attributes set will be returned
+            a key __class__ must be added to this dictionary with the class name of the object
+            created_at and updated_at must be converted to string object in ISO format:
+                format: %Y-%m-%dT%H:%M:%S.%f (ex: 2017-06-14T22:31:03.285259)
+                you can use isoformat() of datetime object
+            This method will be the first piece of the serialization/deserialization process:
+            create a dictionary representation with “simple object type” of our BaseModel
 
     """
 
     def __init__(self, *args, **kwargs):
-        """Public instance attributes initialization after creation
-
-        Args:
-            *args(args): arguments
-            **kwargs(dict): attribute values
-
-        """
+        """Initialize public instance attributes."""
         if not kwargs:
             self.id = str(uuid4())
             self.created_at = self.updated_at = datetime.utcnow()
-            models.storage.new(self)
         else:
             for key, value in kwargs.items():
-                if key in ("updated_at", "created_at"):
+                if key in ('created_at', 'updated_at'):
                     setattr(self, key, datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f'))
-                elif key == "id":
+                elif key == 'id':
                     setattr(self, key, str(value))
                 else:
                     setattr(self, key, value)
 
     def __str__(self):
-        """
-        Returns string representation of the class
-        """
+        """Return a string representation of the class."""
         return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
-        """
-        Updates the public instance attribute 'updated_at' with the current datetime
-        """
+        """Update the public instance attribute updated_at with the current datetime."""
         self.updated_at = datetime.utcnow()
-        models.storage.save()
 
     def to_dict(self):
-        """
-        Method returns a dictionary containing all keys/values of __dict__ of the instance
-        """
+        """Return a dictionary representation of the instance."""
         obj_dict = self.__dict__.copy()
         obj_dict['created_at'] = obj_dict['created_at'].isoformat()
         obj_dict['updated_at'] = obj_dict['updated_at'].isoformat()
