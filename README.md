@@ -97,6 +97,6 @@ Run tests using the following command in your terminal:
 
 python -m unittest discover -v
 
-##Authors
+### Authors
 Robert Santana
 Sebastian Qui~ones
