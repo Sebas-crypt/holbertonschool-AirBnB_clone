@@ -91,7 +91,12 @@ for amenity_instance in all_amenities.values():
 place_dict = place.to_dict()
 print(f"Place Dictionary: {place_dict}")
 
+
 ### Running Tests
 Run tests using the following command in your terminal:
 
 python -m unittest discover -v
+
+##Authors
+Robert Santana
+Sebastian Qui~ones
