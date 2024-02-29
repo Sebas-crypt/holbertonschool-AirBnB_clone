@@ -18,18 +18,18 @@ class BaseModel:
     Methods:
         __str__: prints the class name, id, and creates dictionary
         representations of the input values
-        save(self): updates instance arttributes with current datetime
+        save(self): updates instance attributes with current datetime
         to_dict(self): returns the dictionary values of the instance obj
 
     """
 
     def __init__(self, *args, **kwargs):
-        """Public instance artributes initialization
+        """Public instance attributes initialization
         after creation
 
         Args:
             *args(args): arguments
-            **kwargs(dict): attrubute values
+            **kwargs(dict): attribute values
 
         """
         DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
@@ -41,9 +41,8 @@ class BaseModel:
         else:
             for key, value in kwargs.items():
                 if key in ("updated_at", "created_at"):
-                    self.__dict__[key] = datetime.strptime(
-                        value, DATE_TIME_FORMAT)
-                elif key[0] == "id":
+                    self.__dict__[key] = datetime.strptime(value, DATE_TIME_FORMAT)
+                elif key.startswith("id"):
                     self.__dict__[key] = str(value)
                 else:
                     self.__dict__[key] = value
@@ -52,8 +51,7 @@ class BaseModel:
         """
         Returns string representation of the class
         """
-        return "[{}] ({}) {}".format(self.__class__.__name__,
-                                     self.id, self.__dict__)
+        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
         """
@@ -65,12 +63,12 @@ class BaseModel:
 
     def to_dict(self):
         """
-        Method returns a dictionary containing all 
+        Method returns a dictionary containing all
         keys/values of __dict__ instance
         """
         map_objects = {}
         for key, value in self.__dict__.items():
-            if key == "created_at" or key == "updated_at":
+            if key in ("created_at", "updated_at"):
                 map_objects[key] = value.isoformat()
             else:
                 map_objects[key] = value
